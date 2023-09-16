@@ -1,19 +1,11 @@
 'use client';
 
 import Card from '@/app/components/UI/Card/Card';
-import { useEffect, useState } from 'react';
+import useCounter from '@/app/hooks/use-counter';
 import './BackwardCounter.css';
 
-const BackwardCounter = () => {
-  const [counter, setCounter] = useState<number>(0);
-
-  useEffect(() => {
-    const interval: NodeJS.Timer = setInterval(() => {
-      setCounter((prevCounter: number) => prevCounter - 1);
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
+const BackwardCounter = (): JSX.Element => {
+  const counter: number = useCounter(false);
 
   return <Card>{counter}</Card>;
 };
