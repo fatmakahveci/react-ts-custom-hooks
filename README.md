@@ -1,51 +1,58 @@
-# Getting Started with Create React App
+# React Custom Hooks Demo
 
 [![React](https://img.shields.io/badge/React-TypeScript-149ECA?logo=react&logoColor=white)](https://react.dev/)
-[![Create React App](https://img.shields.io/badge/Tooling-Create%20React%20App-09D3AC?logo=createreactapp&logoColor=white)](https://create-react-app.dev/)
+[![Next.js](https://img.shields.io/badge/Next.js-React-000000?logo=next.js&logoColor=white)](https://nextjs.org/)
 [![Last commit](https://img.shields.io/github/last-commit/fatmakahveci/react-ts-custom-hooks)](https://github.com/fatmakahveci/react-ts-custom-hooks/commits/main)
 [![License](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE.md)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A small Next.js and TypeScript project that extracts reusable timer behavior into a custom React hook.
 
-## Available Scripts
+## Highlights
 
-In the project directory, you can run:
+- Forward and backward counters with independent intervals
+- Shared counter behavior through `use-counter`
+- Effect cleanup for timer lifecycle safety
+- Typed, reusable presentation components
 
-### `npm start`
+## Technology
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- Next.js
+- React
+- TypeScript
+- React Hooks
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Getting Started
 
-### `npm test`
+### Prerequisites
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js 20 or newer
+- npm
 
-### `npm run build`
+### Installation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+npm install
+npm run dev
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Open http://localhost:3000.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Quality Checks
 
-### `npm run eject`
+```bash
+npm run lint
+npm run build
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Repository Structure
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- `src/app/hooks/use-counter.tsx` — reusable counter hook
+- `src/app/components/ForwardCounter` — incrementing example
+- `src/app/components/BackwardCounter` — decrementing example
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Project Resources
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- [Changelog](CHANGELOG.md)
+- [Contributing guide](.github/CONTRIBUTING.md)
+- [Security policy](.github/SECURITY.md)
+- [License](LICENSE.md)
