@@ -6,7 +6,7 @@ const useCounter = (forwards: boolean = true) => {
     const [counter, setCounter] = useState<number>(0);
 
     useEffect(() => {
-      const interval: NodeJS.Timer = setInterval(() => {
+      const interval: ReturnType<typeof setInterval> = setInterval(() => {
         if (forwards) {
             setCounter((prevCounter: number) => prevCounter + 1);    
         } else {
@@ -15,7 +15,7 @@ const useCounter = (forwards: boolean = true) => {
       }, 1000);
   
       return () => clearInterval(interval);
-    }, []);
+    }, [forwards]);
 
     return counter;
 }
