@@ -18,11 +18,13 @@ export type Session = { id: string; taskTitle: string; minutes: number; complete
 export type Workspace = { version: 1; tasks: Task[]; sessions: Session[]; timer: Timer | null };
 export type Snapshot = { revision: number; data: Workspace };
 export const EMPTY_WORKSPACE: Workspace = { version: 1, tasks: [], sessions: [], timer: null };
-const record = (v: unknown): v is Record<string, unknown> => typeof v === "object" && v !== null;
+const record = (v: unknown): v is Record<string, unknown> =>
+  typeof v === "object" && v !== null && !Array.isArray(v);
 const text = (v: unknown, max: number): v is string =>
   typeof v === "string" && v.trim().length > 0 && v.length <= max;
 const number = (v: unknown): v is number =>
   typeof v === "number" && Number.isSafeInteger(v) && v >= 0;
+const timestamp = (v: unknown): v is number => number(v) && v <= 8_640_000_000_000_000;
 export function isWorkspace(v: unknown): v is Workspace {
   if (
     !record(v) ||
@@ -39,9 +41,9 @@ export function isWorkspace(v: unknown): v is Workspace {
         record(t) &&
         text(t.id, 80) &&
         text(t.title, 180) &&
-        ["normal", "high"].includes(String(t.priority)) &&
+        (t.priority === "normal" || t.priority === "high") &&
         typeof t.done === "boolean" &&
-        number(t.createdAt),
+        timestamp(t.createdAt),
     )
   )
     return false;
@@ -54,7 +56,7 @@ export function isWorkspace(v: unknown): v is Workspace {
         number(s.minutes) &&
         s.minutes > 0 &&
         s.minutes <= 60 &&
-        number(s.completedAt),
+        timestamp(s.completedAt),
     )
   )
     return false;
@@ -69,12 +71,12 @@ export function isWorkspace(v: unknown): v is Workspace {
     record(t) &&
     text(t.id, 80) &&
     text(t.taskTitle, 180) &&
-    ["focus", "break"].includes(String(t.mode)) &&
+    (t.mode === "focus" || t.mode === "break") &&
     number(t.durationMs) &&
     [300000, 900000, 1500000, 3000000].includes(t.durationMs) &&
     number(t.remainingMs) &&
     t.remainingMs <= t.durationMs &&
-    (t.endsAt === null || number(t.endsAt)) &&
+    (t.endsAt === null || timestamp(t.endsAt)) &&
     (t.mode === "break"
       ? t.taskId === null
       : v.tasks.some((task) => task.id === t.taskId && !task.done))

@@ -8,6 +8,12 @@ where applicable.
 
 ## [Unreleased]
 
+### Security
+
+- Enforce the workspace request limit in bytes during streaming and cancel oversized uploads before parsing.
+- Require same-origin JSON writes and disable MIME sniffing on API responses.
+- Reject coerced enums, unrenderable timestamps, and revisions that would overflow.
+
 ### Removed
 
 - Retired the Hook Lab route, counter and media-query demos, copyable code panels, and their dedicated tests and styles.

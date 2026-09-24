@@ -51,3 +51,29 @@ it("rounds remaining time up and never displays an early zero", () => {
   expect(formatClock(1)).toBe("00:01");
   expect(formatClock(900000)).toBe("15:00");
 });
+
+it("rejects coerced enums and timestamps that cannot be rendered", () => {
+  expect(isWorkspace({ ...active, tasks: [{ ...active.tasks[0], priority: ["high"] }] })).toBe(
+    false,
+  );
+  expect(isWorkspace({ ...active, timer: { ...active.timer, mode: ["focus"] } })).toBe(false);
+  expect(
+    isWorkspace({ ...active, tasks: [{ ...active.tasks[0], createdAt: Number.MAX_SAFE_INTEGER }] }),
+  ).toBe(false);
+  expect(
+    isWorkspace({ ...active, timer: { ...active.timer, endsAt: Number.MAX_SAFE_INTEGER } }),
+  ).toBe(false);
+  expect(
+    isWorkspace({
+      ...EMPTY_WORKSPACE,
+      sessions: [
+        {
+          id: "invalid-date",
+          taskTitle: "Task",
+          minutes: 15,
+          completedAt: Number.MAX_SAFE_INTEGER,
+        },
+      ],
+    }),
+  ).toBe(false);
+});
