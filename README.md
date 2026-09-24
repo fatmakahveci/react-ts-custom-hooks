@@ -5,9 +5,11 @@
 
 **One task. Your full attention.** A personal workspace for turning a task list into focused work, built with React, TypeScript, and Next.js.
 
-[Open Focus Desk](https://hook-lab-fatmakahveci.fatmakhv.chatgpt.site) · Private deployment; owner sign-in required.
+## Demo
 
-![Focus Desk: adding tasks, running a focus session, and reviewing progress](demo.gif)
+[Open Focus Desk](https://hook-lab-fatmakahveci.fatmakhv.chatgpt.site/)
+
+Private deployment; owner sign-in required.
 
 ## What you can do
 
