@@ -11,10 +11,6 @@
   border-bottom: 1px solid var(--line);
   gap: 20px;
 }
-.desk-header > a:last-child {
-  font-size: 13px;
-  font-weight: 600;
-}
 .desk-heading {
   display: flex;
   justify-content: space-between;
@@ -152,9 +148,6 @@
   }
   .desk-header .brand {
     font-size: 20px;
-  }
-  .desk-header > a:last-child {
-    font-size: 11px;
   }
   .task-input-row {
     flex-wrap: wrap;
@@ -436,15 +429,6 @@
   padding: 8px;
   border-radius: 50%;
 }
-.desk-footer {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  padding-top: 30px;
-  font-size: 11px;
-  color: var(--muted);
-  line-height: 1.7;
-}
 .desk-error {
   display: flex;
   justify-content: space-between;
@@ -517,10 +501,6 @@
     justify-content: flex-end;
   }
   .task-row {
-    gap: 8px;
-  }
-  .desk-footer {
-    flex-direction: column;
     gap: 8px;
   }
   .history-panel .panel-heading {

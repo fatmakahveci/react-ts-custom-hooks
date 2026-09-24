@@ -44,9 +44,9 @@ project.
 ## Naming and Layout
 
 - Use lowercase kebab-case for application filenames and directories, such as
-  `forward-counter.tsx` and `components/counters`.
+  `focus-desk.tsx` and `components/focus`.
 - Keep React component names in PascalCase and hook functions in camelCase with
-  a `use` prefix (`ForwardCounter`, `useCounter`).
+  a `use` prefix (`FocusDesk`, `useWorkspace`).
 - Use `.tsx` for files containing JSX and `.ts` for TypeScript without JSX.
 - Keep route files in `src/app`, reusable components in `src/components`, and
   reusable hooks in `src/hooks`. Preserve Next.js special filenames such as

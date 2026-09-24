@@ -6,7 +6,7 @@ Focus Desk is a personal task and focus application built with Next.js and a Sit
 
 Local Next.js mode uses one SQLite workspace and binds to loopback. It has no account system and is not intended for shared hosting. Local database files are ignored by Git. JSON exports contain task titles and session history; they are user-requested downloads, not encrypted backups.
 
-The `/lab` educational note demo and focus-duration preference use localStorage. Tasks and session history do not. Reports may concern application code, authentication boundaries, data isolation, dependencies, build configuration, or repository workflows.
+Only the focus-duration preference uses localStorage. Tasks and session history do not. Reports may concern application code, authentication boundaries, data isolation, dependencies, build configuration, or repository workflows.
 
 ## Supported Versions
 

@@ -142,9 +142,6 @@ export default function FocusDesk() {
         <Link className="brand" href="/" aria-label="Focus Desk home">
           <span aria-hidden="true">◷</span>Focus Desk<span className="brand-dot">.</span>
         </Link>
-        <Link href="/lab">
-          Explore the hooks <span aria-hidden="true">↗</span>
-        </Link>
       </header>
       <div className="desk-heading">
         <div>
@@ -549,12 +546,6 @@ export default function FocusDesk() {
           </ol>
         )}
       </section>
-      <div className="desk-footer">
-        <span>One task. Your full attention.</span>
-        <span>
-          Built with reusable React hooks · <Link href="/lab">See how it works ↗</Link>
-        </span>
-      </div>
     </main>
   );
 }

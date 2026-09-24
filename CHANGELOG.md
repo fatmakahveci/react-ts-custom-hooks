@@ -8,6 +8,12 @@ where applicable.
 
 ## [Unreleased]
 
+### Removed
+
+- Retired the Hook Lab route, counter and media-query demos, copyable code panels, and their dedicated tests and styles.
+- Removed obsolete hook documentation and the unused OCI source-package publishing workflow.
+- Removed developer-facing demo links and repeated footer copy from Focus Desk.
+
 ### Added
 
 - Focus Desk: persistent tasks, priorities, debounced search, editing, completion, and confirmed deletion.

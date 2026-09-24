@@ -26,7 +26,7 @@ The hosted app stores each signed-in user's workspace in Cloudflare D1, keyed by
 
 A running timer stores an absolute deadline. Refreshing or closing the page does not reset it. If the deadline passes while the app is closed, reopening records completion once. A paused timer stays paused. Stopping early does not add focus time; breaks do not count toward focus totals. The selected task remains open until you explicitly mark it complete. Daily totals use the viewing device's local timezone.
 
-Tasks and history are not stored in localStorage. Only the preferred focus duration is device-local. The separate Hook Lab note experiment also uses browser storage and never uploads its sample note.
+Tasks and history are not stored in localStorage. Only the preferred focus duration is device-local.
 
 ## Run locally
 
@@ -64,24 +64,20 @@ For an installed Chrome browser, use `PLAYWRIGHT_CHROMIUM_CHANNEL=chrome` with t
 
 CI checks Node.js 22 and 24, dependency security, and desktop/mobile browser behavior. API tests run the actual Worker handler against SQLite, covering user isolation, validation, corrupt records, cross-origin writes, and conflicting revisions. Browser tests isolate API state to keep parallel runs independent. A separate integration test and the demo recorder exercise the real local API against dedicated databases.
 
-## The hooks behind the product
-
-The original educational playground remains at `/lab`, linked from the app. Explore independent counters, debouncing, browser-local notes, and media queries. [Hook APIs and examples](docs/hooks.md) document the reusable exports.
-
-The product uses `useWorkspace` for durable saves, refresh, and conflict handling; `useDebounce` for task search; and `useLocalStorage` for duration preferences. Focus timing uses wall-clock deadlines rather than counting interval callbacks.
+## Project structure
 
 ```text
-src/app/                    Focus Desk, Hook Lab, and local API
+src/app/                    Focus Desk and local API
 src/components/focus/       Task workspace and focus interface
 src/hooks/                  Reusable hooks and workspace client
 src/lib/                    Workspace validation, timer rules, API handler
 db/                         Database schema and shared SQL
 sites/worker.ts             Authenticated D1 API and static asset serving
 drizzle/                    Versioned database migrations
-tests/                      Hook, component, API, and browser coverage
+tests/                      Hook, API, and browser coverage
 scripts/                    Demo recorder and deployment build
 ```
 
 ## Contributing and security
 
-Read the [contributing guide](.github/CONTRIBUTING.md), [security policy](.github/SECURITY.md), and [changelog](CHANGELOG.md). The repository retains its original `react-ts-custom-hooks` package name and Apache 2.0 license. The source-package workflow publishes source archives, not database contents.
+Read the [contributing guide](.github/CONTRIBUTING.md), [security policy](.github/SECURITY.md), and [changelog](CHANGELOG.md). The repository retains its original `react-ts-custom-hooks` package name and Apache 2.0 license.
