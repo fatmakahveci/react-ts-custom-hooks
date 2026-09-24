@@ -10,6 +10,9 @@ where applicable.
 
 ### Added
 
+- Interactive debounce, local storage, and media query hooks with keyboard-accessible tabs.
+- Unit and browser coverage for debounce cleanup, storage synchronization and failures, and media changes.
+
 - Desktop/mobile Playwright tests and automated axe accessibility scans in CI.
 - Shared Prettier formatting and a reproducible demo recording command.
 - A Sites deployment pipeline, live preview link, and social preview metadata.
@@ -45,6 +48,8 @@ where applicable.
 - Enabled Dependabot updates for npm dependencies.
 
 ### Fixed
+
+- Increased muted text contrast across the new experiment tabs.
 
 - Preserved keyboard focus when resetting a counter and generated unique control IDs for repeated instances.
 - Updated Next.js and its ESLint configuration to 16.3.6 and sharp to 0.35.4 to resolve reported dependency advisories.

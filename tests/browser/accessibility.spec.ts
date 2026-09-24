@@ -15,6 +15,10 @@ test("the page and expanded controls have no WCAG A/AA violations", async ({ pag
     .locator("summary")
     .click();
   expect((await scan()).violations).toEqual([]);
+  for (const name of ["useDebounce", "useLocalStorage", "useMediaQuery"]) {
+    await page.getByRole("tab", { name }).click();
+    expect((await scan()).violations).toEqual([]);
+  }
 });
 
 test("reduced motion removes control transitions", async ({ page }) => {

@@ -1,7 +1,7 @@
 :root {
   color-scheme: light;
   --ink: #20243e;
-  --muted: #656a81;
+  --muted: #5d637a;
   --line: #e0e2ed;
   --paper: #f6f6fb;
   --blue: #4449cd;
@@ -808,5 +808,215 @@ footer {
   }
   .live-code-hint {
     display: none;
+  }
+}
+
+.hook-experiments {
+  margin-top: 48px;
+}
+.experiment-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 6px;
+  background: #eaeaf5;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  margin-bottom: 18px;
+}
+.experiment-tabs button {
+  text-align: left;
+  padding: 15px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--muted);
+}
+.experiment-tabs button[aria-selected="true"] {
+  background: white;
+  color: var(--blue);
+  border-color: #d9dbef;
+  box-shadow: 0 2px 4px #20243e08;
+}
+.experiment-tabs strong {
+  display: block;
+  font: 600 13px var(--mono);
+}
+.experiment-tabs button > span {
+  display: block;
+  font-size: 11px;
+  margin-top: 7px;
+  color: var(--muted);
+}
+.experiment-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  padding: 28px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.experiment-layout > div {
+  min-width: 0;
+}
+.experiment-layout .eyebrow {
+  margin-bottom: 12px;
+}
+.experiment-layout h3 {
+  font-size: 23px;
+  letter-spacing: -0.6px;
+  margin: 0 0 12px;
+}
+.experiment-copy {
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--muted);
+  margin: 0 0 20px;
+}
+.field-label {
+  display: block;
+  margin: 16px 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.experiment-layout input,
+.experiment-layout textarea,
+.experiment-layout select {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid #bec2d5;
+  border-radius: 8px;
+  padding: 12px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--ink);
+  background: white;
+}
+.experiment-layout textarea {
+  resize: vertical;
+}
+.experiment-result {
+  padding: 22px;
+  background: #f0f1ff;
+  border: 1px solid #dcdefb;
+  border-radius: 10px;
+  margin-bottom: 16px;
+}
+.experiment-result > span {
+  font: 10px var(--mono);
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.experiment-result output {
+  display: block;
+  font-size: 23px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  margin: 14px 0;
+  color: var(--blue);
+  white-space: pre-wrap;
+}
+.experiment-result p {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 0;
+}
+.experiment-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+.experiment-actions button {
+  min-height: 44px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  background: var(--blue);
+  border: 1px solid var(--blue);
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+}
+.experiment-actions .secondary-button {
+  background: white;
+  color: var(--ink);
+  border-color: #bec2d5;
+}
+.experiment-feedback {
+  min-height: 20px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+.media-results {
+  margin: 24px 0 0;
+}
+.media-results > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+}
+.media-results dt {
+  color: var(--muted);
+}
+.media-results dd {
+  margin: 0;
+  font-weight: 600;
+}
+.responsive-preview {
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+  background: #f0f1ff;
+  border: 1px solid #dcdefb;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  min-height: 170px;
+}
+.responsive-preview.is-wide {
+  grid-template-columns: 1fr 2fr;
+}
+.responsive-preview > span {
+  display: grid;
+  align-content: center;
+  text-align: center;
+  padding: 18px 10px;
+  border: 1px dashed #9b9fce;
+  border-radius: 7px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--blue);
+}
+@media (max-width: 760px) {
+  .experiment-layout {
+    grid-template-columns: 1fr;
+    padding: 20px;
+    gap: 20px;
+  }
+  .experiment-tabs {
+    gap: 4px;
+  }
+  .experiment-tabs button {
+    padding: 12px 7px;
+    text-align: center;
+  }
+  .experiment-tabs strong {
+    font-size: 10px;
+  }
+  .experiment-tabs button > span {
+    display: none;
+  }
+}
+@media (max-width: 380px) {
+  .experiment-tabs strong {
+    font-size: 9px;
+  }
+  .experiment-layout {
+    padding: 16px;
   }
 }

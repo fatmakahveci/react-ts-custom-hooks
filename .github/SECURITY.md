@@ -3,7 +3,10 @@
 ## Project Scope
 
 Hook Lab (`react-ts-custom-hooks`) is an educational Next.js application that
-demonstrates reusable React hooks through interactive counters. It does not
+demonstrates reusable React hooks through counters, debounced input, browser-local
+notes, and media queries. The note demo stores text in localStorage without
+encryption and does not upload it. The hosted Sites preview has a separate
+owner-only sign-in gate. It does not
 implement user accounts, payments, or a database. Security reports may still
 concern application code, dependencies, build configuration, or repository
 workflows.

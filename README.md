@@ -9,7 +9,7 @@ An interactive playground for understanding custom React hooks, built with TypeS
 
 ## Demo
 
-[Open the live preview](https://hook-lab-fatmakahveci.opal-olive-4420.chatgpt.site) (owner-only Sites preview; sign-in required).
+[Open the live preview](https://hook-lab-fatmakahveci.fatmakhv.chatgpt.site) (owner-only Sites preview; sign-in required).
 
 ![Hook Lab demo showing independent counters, pause and resume, speed changes, and reset](demo.gif)
 
@@ -17,6 +17,7 @@ A recording of the application demonstrating independent counter controls.
 
 ## Features
 
+- **Hook experiments:** debounce typing, save a browser-local note, and inspect responsive media queries in keyboard-accessible tabs.
 - **Independent counters:** count forward or backward from zero.
 - **Interactive timing:** pause, resume, and choose a 0.5, 1, or 2-second tick interval.
 - **Configurable steps:** move by 1, 2, 5, or 10 per tick; advance manually while paused.
@@ -149,21 +150,41 @@ export default function ManualCounter() {
 
 The original default export still returns a number, so existing `useCounter()` calls remain valid. Both APIs share one timer implementation. Values use JavaScript numbers and are intended for small interactive experiments, not precision arithmetic beyond the safe-integer range.
 
+## More Hooks
+
+The **Explore more hooks** tabs provide three additional interactive examples:
+
+| Hook                                            | Behavior                                                                                                                                                             |
+| ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `useDebounce(value, delayMs)`                   | Returns the latest value after a quiet period; cleans up pending timers on changes and unmount. Delay must be finite and between 0 and 2,147,483,647 ms.             |
+| `useLocalStorage(key, initialValue, validate?)` | Returns `{ value, setValue, remove, error }`; synchronizes hook instances and browser tabs with SSR-safe initial reads. Writes and removal return a success boolean. |
+| `useMediaQuery(query, fallback?)`               | Tracks a media query and cleans up its listener; uses the fallback during server rendering and when matchMedia is unavailable.                                       |
+
+Import these default exports from `@/hooks/use-debounce`, `@/hooks/use-local-storage`, and `@/hooks/use-media-query`. Pass a runtime validator to `useLocalStorage` when stored JSON must match a specific type. Malformed or rejected data returns the initial value and an error without silently overwriting the stored entry.
+
+The note demo saves only when **Save note** is pressed. It stores text in this browser under `hook-lab:note`, survives reloads, and can be removed with **Clear saved note**. It does not upload notes or provide encrypted storage.
+
 ## Development Commands
 
-| Command              | Purpose                                                               |
-| -------------------- | --------------------------------------------------------------------- |
-| `npm run dev`        | Start the development server.                                         |
-| `npm run lint`       | Run ESLint with zero warnings allowed.                                |
-| `npm run typecheck`  | Generate Next.js route types and check TypeScript.                    |
-| `npm test`           | Run the test suite once.                                              |
-| `npm run test:watch` | Run tests in watch mode.                                              |
-| `npm run build`      | Create a production build.                                            |
-| `npm start`          | Serve an existing production build.                                   |
-| `npm run audit`      | Check dependencies for high or critical security advisories.          |
-| `npm run check`      | Run lint, type checking, tests, and the production build in sequence. |
+| Command                        | Purpose                                                                           |
+| ------------------------------ | --------------------------------------------------------------------------------- |
+| `npm run format`               | Format source and documentation with Prettier.                                    |
+| `npm run format:check`         | Verify formatting without changing files.                                         |
+| `npm run test:browser`         | Run desktop/mobile interaction and accessibility checks.                          |
+| `npm run test:browser:install` | Install Chromium for browser checks.                                              |
+| `npm run demo`                 | Build and regenerate demo.gif from real interactions.                             |
+| `npm run build:sites`          | Export the application and build its Sites worker.                                |
+| `npm run dev`                  | Start the development server.                                                     |
+| `npm run lint`                 | Run ESLint with zero warnings allowed.                                            |
+| `npm run typecheck`            | Generate Next.js route types and check TypeScript.                                |
+| `npm test`                     | Run the test suite once.                                                          |
+| `npm run test:watch`           | Run tests in watch mode.                                                          |
+| `npm run build`                | Create a production build.                                                        |
+| `npm start`                    | Serve an existing production build.                                               |
+| `npm run audit`                | Check dependencies for high or critical security advisories.                      |
+| `npm run check`                | Run formatting, lint, type checking, tests, and the production build in sequence. |
 
-Run `npm run check` before submitting changes. GitHub Actions runs the same checks on Node.js 22 and 24 for pushes and pull requests to `main`, with a separate dependency audit.
+Run `npm run check` before submitting changes. GitHub Actions runs the same checks on Node.js 22 and 24 for pushes and pull requests to `main`, with separate dependency audit and desktop/mobile browser jobs.
 
 Tests use Vitest, React Testing Library, and jsdom. They cover direction changes, independent counters, pause/resume, speed changes, reset, invalid delays, interval cleanup, React Strict Mode, keyboard focus after reset, repeated instances, step sizes, presets, controller resets (including at zero), unchanged-option rerenders, paused presets, disabled manual stepping, and clipboard failure or out-of-order completion.
 
@@ -177,6 +198,8 @@ src/
 │   └── page.tsx                     Playground and usage explanation
 ├── components/code/
 │   └── code-example.tsx             Copyable code with accessible feedback
+├── components/experiments/
+│   └── hook-experiments.tsx          Debounce, storage, and media demos
 ├── components/counters/
 │   ├── counter.tsx                  Counter state and user actions
 │   ├── counter-settings.tsx         Controlled settings and preset fields
@@ -184,13 +207,19 @@ src/
 │   ├── forward-counter.tsx          Forward-counting example
 │   └── backward-counter.tsx         Backward-counting example
 └── hooks/
-    └── use-counter.ts               Timer hook and CounterOptions type
+    ├── use-counter.ts               Timer hook and CounterOptions type
+    ├── use-debounce.ts              Debounced values and timeout cleanup
+    ├── use-local-storage.ts         Validated storage and cross-tab updates
+    └── use-media-query.ts           SSR-safe media query subscription
 tests/
-├── hooks/                          Timer and controller lifecycle tests
+├── browser/                        Playwright interactions and axe scans
+├── hooks/                          Lifecycle, storage, and subscription tests
 └── app/
     ├── page.test.tsx                Interactive page and focus tests
     ├── counter.test.tsx             Presets, stepping, and instance isolation
     └── code-example.test.tsx        Clipboard success and failure tests
+scripts/                            Demo recording and Sites build scripts
+sites/                              Static asset worker
 .github/
 ├── workflows/
 │   ├── quality-checks.yml           Lint, types, tests, and build

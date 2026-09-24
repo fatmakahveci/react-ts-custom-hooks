@@ -1,4 +1,5 @@
 import Link from "next/link";
+import HookExperiments from "@/components/experiments/hook-experiments";
 import BackwardCounter from "@/components/counters/backward-counter";
 import ForwardCounter from "@/components/counters/forward-counter";
 
@@ -93,6 +94,8 @@ export default function Home() {
           </span>
         </p>
       </section>
+
+      <HookExperiments />
 
       <section className="experiment-guide" aria-labelledby="experiments-title">
         <div className="section-heading">
