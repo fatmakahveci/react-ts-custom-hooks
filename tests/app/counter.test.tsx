@@ -9,7 +9,12 @@ afterEach(() => {
 
 it("gives repeated counter instances unique labels and independent controls", () => {
   vi.useFakeTimers();
-  render(<><Counter direction="forward" /><Counter direction="forward" /></>);
+  render(
+    <>
+      <Counter direction="forward" />
+      <Counter direction="forward" />
+    </>,
+  );
   const regions = screen.getAllByRole("region", { name: "Forward counter" });
   const first = within(regions[0]);
   const second = within(regions[1]);
@@ -22,13 +27,17 @@ it("gives repeated counter instances unique labels and independent controls", ()
   expect(second.getByLabelText("Forward counter value").textContent).toBe("1");
   fireEvent.click(first.getByRole("button", { name: "Pause forward counter" }));
   expect(first.getByRole("status", { name: "Forward counter status" }).textContent).toBe("Paused");
-  expect(second.getByRole("status", { name: "Forward counter status" }).textContent).toBe("Running");
+  expect(second.getByRole("status", { name: "Forward counter status" }).textContent).toBe(
+    "Running",
+  );
 });
 
 it("applies presets, manually steps while paused, and exposes matching live code", () => {
   vi.useFakeTimers();
   render(<Counter direction="forward" />);
-  const stepButton = screen.getByRole("button", { name: "Step forward counter" }) as HTMLButtonElement;
+  const stepButton = screen.getByRole("button", {
+    name: "Step forward counter",
+  }) as HTMLButtonElement;
   expect(stepButton.disabled).toBe(true);
   fireEvent.click(screen.getByRole("button", { name: "Sprint" }));
   act(() => vi.advanceTimersByTime(1000));
@@ -57,7 +66,9 @@ it("preserves a paused count when applying a preset", () => {
   fireEvent.click(screen.getByRole("button", { name: "Sprint" }));
   act(() => vi.advanceTimersByTime(2000));
   expect(screen.getByLabelText("Backward counter value").textContent).toBe("-1");
-  expect(screen.getByRole("status", { name: "Backward counter status" }).textContent).toBe("Paused");
+  expect(screen.getByRole("status", { name: "Backward counter status" }).textContent).toBe(
+    "Paused",
+  );
   expect(vi.getTimerCount()).toBe(0);
   fireEvent.click(screen.getByRole("button", { name: "Step backward counter" }));
   expect(screen.getByLabelText("Backward counter value").textContent).toBe("-6");
@@ -78,5 +89,9 @@ it("clears an active preset when custom settings no longer match it", () => {
   fireEvent.click(screen.getByRole("button", { name: "Sprint" }));
   fireEvent.change(screen.getByLabelText("Step size"), { target: { value: "2" } });
   const presets = within(screen.getByRole("group", { name: "Forward counter presets" }));
-  expect(presets.getAllByRole("button").every((button) => button.getAttribute("aria-pressed") === "false")).toBe(true);
+  expect(
+    presets
+      .getAllByRole("button")
+      .every((button) => button.getAttribute("aria-pressed") === "false"),
+  ).toBe(true);
 });

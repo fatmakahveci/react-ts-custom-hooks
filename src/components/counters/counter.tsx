@@ -59,7 +59,9 @@ export default function Counter({ direction }: CounterProps) {
     <section className={`counter-card counter-${direction}`} aria-labelledby={`${id}-title`}>
       <div className="counter-heading">
         <div className="counter-identity">
-          <span className="direction-icon" aria-hidden="true">{forwards ? "↗" : "↘"}</span>
+          <span className="direction-icon" aria-hidden="true">
+            {forwards ? "↗" : "↘"}
+          </span>
           <div>
             <h3 id={`${id}-title`}>{title}</h3>
             <p className="counter-description">
@@ -72,7 +74,8 @@ export default function Counter({ direction }: CounterProps) {
           aria-label={`${title} status`}
           className={`status ${running ? "is-running" : ""}`}
         >
-          <span aria-hidden="true" />{running ? "Running" : "Paused"}
+          <span aria-hidden="true" />
+          {running ? "Running" : "Paused"}
         </span>
       </div>
 
@@ -83,8 +86,9 @@ export default function Counter({ direction }: CounterProps) {
           {count}
         </output>
         <span className="step-label">
-          {sign}{step} per tick <span aria-hidden="true">·</span>{" "}
-          {1000 / intervalMs} {intervalMs === 1000 ? "tick" : "ticks"} / second
+          {sign}
+          {step} per tick <span aria-hidden="true">·</span> {1000 / intervalMs}{" "}
+          {intervalMs === 1000 ? "tick" : "ticks"} / second
         </span>
       </div>
 
@@ -133,7 +137,9 @@ export default function Counter({ direction }: CounterProps) {
           ? "Pause to advance one step at a time."
           : "Step advances once. Resume restarts the timer."}
       </p>
-      <span className="sr-only" role="status">{announcement}</span>
+      <span className="sr-only" role="status">
+        {announcement}
+      </span>
 
       <details className="live-code">
         <summary>

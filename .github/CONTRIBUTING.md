@@ -55,3 +55,10 @@ project.
   `.test.ts` suffix, or `.test.tsx` when the test uses JSX.
 - Preserve conventional tooling and documentation names such as `README.md`,
   `SECURITY.md`, and `package.json`.
+
+## Formatting and Browser Checks
+
+Run `npm run format` before committing and `npm run check` before review.
+Install Chromium with `npm run test:browser:install`, then run
+`npm run test:browser` for interaction and accessibility checks. Update the
+recording with `npm run demo` when the counter experience changes.

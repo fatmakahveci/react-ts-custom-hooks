@@ -10,6 +10,10 @@ where applicable.
 
 ### Added
 
+- Desktop/mobile Playwright tests and automated axe accessibility scans in CI.
+- Shared Prettier formatting and a reproducible demo recording command.
+- A Sites deployment pipeline, live preview link, and social preview metadata.
+
 - Configurable step sizes, manual stepping, and per-counter Steady/Sprint/Slow presets.
 - Live configuration examples with copy controls and an accessible clipboard fallback.
 - A backward-compatible `useCounterController` API with explicit tick and reset controls.

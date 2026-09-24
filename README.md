@@ -9,6 +9,8 @@ An interactive playground for understanding custom React hooks, built with TypeS
 
 ## Demo
 
+[Open the live preview](https://hook-lab-fatmakahveci.opal-olive-4420.chatgpt.site) (owner-only Sites preview; sign-in required).
+
 ![Hook Lab demo showing independent counters, pause and resume, speed changes, and reset](demo.gif)
 
 A recording of the application demonstrating independent counter controls.
@@ -52,7 +54,7 @@ npm run build
 npm start
 ```
 
-This starts the built application locally. Choose your own hosting environment for deployment.
+This starts the built application locally. The Sites pipeline uses a separate static export; normal Next.js development remains unchanged.
 
 ## Explore the Playground
 
@@ -97,12 +99,12 @@ export default function CounterExample() {
 useCounter(forwards?: boolean, options?: CounterOptions): number
 ```
 
-| Parameter | Default | Description |
-| --- | --- | --- |
-| `forwards` | `true` | Add `1` per tick. Set to `false` to subtract `1`. |
-| `options.running` | `true` | Set to `false` to pause while retaining the current count. |
-| `options.step` | `1` | Positive safe integer added or subtracted per tick. Invalid values throw `RangeError`. |
-| `options.intervalMs` | `1000` | Finite delay between `1` and `2_147_483_647` milliseconds, inclusive. Invalid values throw `RangeError`. |
+| Parameter            | Default | Description                                                                                              |
+| -------------------- | ------- | -------------------------------------------------------------------------------------------------------- |
+| `forwards`           | `true`  | Add `1` per tick. Set to `false` to subtract `1`.                                                        |
+| `options.running`    | `true`  | Set to `false` to pause while retaining the current count.                                               |
+| `options.step`       | `1`     | Positive safe integer added or subtracted per tick. Invalid values throw `RangeError`.                   |
+| `options.intervalMs` | `1000`  | Finite delay between `1` and `2_147_483_647` milliseconds, inclusive. Invalid values throw `RangeError`. |
 
 The returned number starts at `0`. Each hook call owns independent state.
 
@@ -149,17 +151,17 @@ The original default export still returns a number, so existing `useCounter()` c
 
 ## Development Commands
 
-| Command | Purpose |
-| --- | --- |
-| `npm run dev` | Start the development server. |
-| `npm run lint` | Run ESLint with zero warnings allowed. |
-| `npm run typecheck` | Generate Next.js route types and check TypeScript. |
-| `npm test` | Run the test suite once. |
-| `npm run test:watch` | Run tests in watch mode. |
-| `npm run build` | Create a production build. |
-| `npm start` | Serve an existing production build. |
-| `npm run audit` | Check dependencies for high or critical security advisories. |
-| `npm run check` | Run lint, type checking, tests, and the production build in sequence. |
+| Command              | Purpose                                                               |
+| -------------------- | --------------------------------------------------------------------- |
+| `npm run dev`        | Start the development server.                                         |
+| `npm run lint`       | Run ESLint with zero warnings allowed.                                |
+| `npm run typecheck`  | Generate Next.js route types and check TypeScript.                    |
+| `npm test`           | Run the test suite once.                                              |
+| `npm run test:watch` | Run tests in watch mode.                                              |
+| `npm run build`      | Create a production build.                                            |
+| `npm start`          | Serve an existing production build.                                   |
+| `npm run audit`      | Check dependencies for high or critical security advisories.          |
+| `npm run check`      | Run lint, type checking, tests, and the production build in sequence. |
 
 Run `npm run check` before submitting changes. GitHub Actions runs the same checks on Node.js 22 and 24 for pushes and pull requests to `main`, with a separate dependency audit.
 
@@ -203,7 +205,7 @@ The page and direction wrappers compose a shared interactive `Counter` component
 
 This repository is an educational application with a private npm package configuration. To reuse the hook elsewhere, copy the hook source and adapt its import path to your project.
 
-The source-package workflow publishes an OCI source archive to GitHub Container Registry when triggered by a published release or a manual run. Website deployment is managed separately.
+The source-package workflow publishes an OCI source archive to GitHub Container Registry when triggered by a published release or a manual run. The Sites deployment is built with `npm run build:sites`; its project reference lives in `.openai/hosting.json`.
 
 ## Contributing
 
@@ -216,3 +218,19 @@ Report suspected vulnerabilities privately using the process in [SECURITY.md](.g
 ## License
 
 Licensed under the [Apache License 2.0](LICENSE.md).
+
+## Browser Tests and Demo Recording
+
+Install Chromium once, then run the browser suite or regenerate the demo:
+
+```bash
+npm run test:browser:install
+npm run test:browser
+npm run demo
+```
+
+Both commands manage their own production server. The browser suite checks desktop and mobile interactions, focus, clipboard behavior, horizontal overflow, reduced motion, and WCAG A/AA rules through axe. Automated scans supplement manual accessibility review; they do not establish full conformance.
+
+If Chromium is unavailable but Chrome is installed, set `PLAYWRIGHT_CHROMIUM_CHANNEL=chrome`. Demo recording uses virtual time and writes the GIF only after every recorded interaction succeeds. Playwright saves failure traces and screenshots under `test-results/`, with its report under `playwright-report/`.
+
+The owner-only live preview requires the site owner's sign-in. Publishing the preview does not grant anonymous access.

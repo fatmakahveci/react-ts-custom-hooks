@@ -19,7 +19,9 @@ it("counts forward once per second and clears its timer on unmount", () => {
 });
 
 it("changes direction without resetting state or duplicating timers", () => {
-  const { result, rerender } = renderHook(({ forward }) => useCounter(forward), { initialProps: { forward: false } });
+  const { result, rerender } = renderHook(({ forward }) => useCounter(forward), {
+    initialProps: { forward: false },
+  });
   act(() => vi.advanceTimersByTime(2000));
   expect(result.current).toBe(-2);
   rerender({ forward: true });
@@ -29,7 +31,9 @@ it("changes direction without resetting state or duplicating timers", () => {
 });
 
 it("pauses, resumes, and replaces the interval when its speed changes", () => {
-  const { result, rerender } = renderHook((options) => useCounter(true, options), { initialProps: { running: true, intervalMs: 500 } });
+  const { result, rerender } = renderHook((options) => useCounter(true, options), {
+    initialProps: { running: true, intervalMs: 500 },
+  });
   act(() => vi.advanceTimersByTime(1000));
   expect(result.current).toBe(2);
   rerender({ running: false, intervalMs: 500 });
@@ -74,7 +78,9 @@ it.each([0, -1, NaN, Infinity, 2_147_483_648])("rejects invalid timer delay %s",
 });
 
 it("updates the step without resetting state or creating additional timers", () => {
-  const { result, rerender } = renderHook(({ step }) => useCounter(false, { step }), { initialProps: { step: 2 } });
+  const { result, rerender } = renderHook(({ step }) => useCounter(false, { step }), {
+    initialProps: { step: 2 },
+  });
   act(() => vi.advanceTimersByTime(2000));
   expect(result.current).toBe(-4);
   rerender({ step: 5 });

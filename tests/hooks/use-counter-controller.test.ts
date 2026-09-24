@@ -10,7 +10,10 @@ afterEach(() => {
 
 it("supports manual steps and resets while paused without starting a timer", () => {
   const { result } = renderHook(() => useCounterController(false, { running: false, step: 5 }));
-  act(() => { result.current.tick(); result.current.tick(); });
+  act(() => {
+    result.current.tick();
+    result.current.tick();
+  });
   expect(result.current.count).toBe(-10);
   act(() => result.current.reset());
   expect(result.current.count).toBe(0);
@@ -31,20 +34,24 @@ it("starts a full new interval on reset and cleans up on unmount", () => {
   expect(vi.getTimerCount()).toBe(0);
 });
 
-it.each([0, -1, 1.5, NaN, Infinity, Number.MAX_SAFE_INTEGER + 1])("rejects invalid step %s", (step) => {
-  const silence = vi.spyOn(console, "error").mockImplementation(() => {});
-  const handleExpectedError = (event: ErrorEvent) => {
-    if (event.error instanceof RangeError && event.error.message.startsWith("step")) event.preventDefault();
-  };
-  window.addEventListener("error", handleExpectedError);
-  try {
-    expect(() => renderHook(() => useCounterController(true, { step }))).toThrow(RangeError);
-    expect(vi.getTimerCount()).toBe(0);
-  } finally {
-    window.removeEventListener("error", handleExpectedError);
-    silence.mockRestore();
-  }
-});
+it.each([0, -1, 1.5, NaN, Infinity, Number.MAX_SAFE_INTEGER + 1])(
+  "rejects invalid step %s",
+  (step) => {
+    const silence = vi.spyOn(console, "error").mockImplementation(() => {});
+    const handleExpectedError = (event: ErrorEvent) => {
+      if (event.error instanceof RangeError && event.error.message.startsWith("step"))
+        event.preventDefault();
+    };
+    window.addEventListener("error", handleExpectedError);
+    try {
+      expect(() => renderHook(() => useCounterController(true, { step }))).toThrow(RangeError);
+      expect(vi.getTimerCount()).toBe(0);
+    } finally {
+      window.removeEventListener("error", handleExpectedError);
+      silence.mockRestore();
+    }
+  },
+);
 
 it("does not restart the interval when a parent rerenders with equivalent options", () => {
   const { result, rerender } = renderHook(() => useCounterController(true, { intervalMs: 1000 }));
@@ -72,7 +79,10 @@ it("uses the latest direction and step for manual ticks after reconfiguration", 
   );
   act(() => result.current.tick());
   rerender({ forwards: false, step: 5 });
-  act(() => { result.current.tick(); result.current.tick(); });
+  act(() => {
+    result.current.tick();
+    result.current.tick();
+  });
   expect(result.current.count).toBe(-8);
   expect(vi.getTimerCount()).toBe(0);
 });

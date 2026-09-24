@@ -51,7 +51,9 @@ export default function CounterSettingsFields({
             onChange={(event) => onChange({ ...settings, intervalMs: Number(event.target.value) })}
           >
             {INTERVAL_OPTIONS.map(({ value, label }) => (
-              <option key={value} value={value}>{label}</option>
+              <option key={value} value={value}>
+                {label}
+              </option>
             ))}
           </select>
         </div>
@@ -63,7 +65,10 @@ export default function CounterSettingsFields({
             onChange={(event) => onChange({ ...settings, step: Number(event.target.value) })}
           >
             {STEP_OPTIONS.map((value) => (
-              <option key={value} value={value}>{sign}{value} per tick</option>
+              <option key={value} value={value}>
+                {sign}
+                {value} per tick
+              </option>
             ))}
           </select>
         </div>

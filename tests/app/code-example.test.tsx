@@ -18,7 +18,9 @@ it("copies the exact displayed configuration", async () => {
 });
 
 it("provides a manual-copy fallback when clipboard access is rejected", async () => {
-  vi.stubGlobal("navigator", { clipboard: { writeText: vi.fn().mockRejectedValue(new Error("Denied")) } });
+  vi.stubGlobal("navigator", {
+    clipboard: { writeText: vi.fn().mockRejectedValue(new Error("Denied")) },
+  });
   render(<CodeExample code="const count = 0;" label="Example" />);
   await act(async () => fireEvent.click(screen.getByRole("button", { name: "Copy Example" })));
   expect(screen.getByRole("status").textContent).toContain("Select the code below");
@@ -34,8 +36,11 @@ it("falls back gracefully when the clipboard API is unavailable", async () => {
 
 it("keeps feedback from the latest copy when an older request finishes last", async () => {
   let finishOlderRequest!: () => void;
-  const olderRequest = new Promise<void>((resolve) => { finishOlderRequest = resolve; });
-  const writeText = vi.fn()
+  const olderRequest = new Promise<void>((resolve) => {
+    finishOlderRequest = resolve;
+  });
+  const writeText = vi
+    .fn()
     .mockReturnValueOnce(olderRequest)
     .mockRejectedValueOnce(new Error("Denied"));
   vi.stubGlobal("navigator", { clipboard: { writeText } });
@@ -50,7 +55,9 @@ it("keeps feedback from the latest copy when an older request finishes last", as
 
 it("clears previous feedback while a new copy request is pending", async () => {
   let finishCopy!: () => void;
-  const pending = new Promise<void>((resolve) => { finishCopy = resolve; });
+  const pending = new Promise<void>((resolve) => {
+    finishCopy = resolve;
+  });
   const writeText = vi.fn().mockResolvedValueOnce(undefined).mockReturnValueOnce(pending);
   vi.stubGlobal("navigator", { clipboard: { writeText } });
   render(<CodeExample code="const count = 0;" label="Example" />);

@@ -16,7 +16,9 @@ export default function CodeExample({ code, label }: CodeExampleProps) {
 
   useEffect(() => {
     // Ignore pending clipboard work after this configuration panel is removed.
-    return () => { request.current += 1; };
+    return () => {
+      request.current += 1;
+    };
   }, []);
 
   async function copy() {
@@ -35,17 +37,18 @@ export default function CodeExample({ code, label }: CodeExampleProps) {
     <div className="code-panel">
       <div className="code-heading">
         <span>{label}</span>
-        <button
-          type="button"
-          className="copy-button"
-          onClick={copy}
-          aria-label={`Copy ${label}`}
-        >
+        <button type="button" className="copy-button" onClick={copy} aria-label={`Copy ${label}`}>
           Copy code
         </button>
       </div>
-      <pre tabIndex={0} aria-label={label}><code>{code}</code></pre>
-      {message && <p className="copy-message" role="status">{message}</p>}
+      <pre tabIndex={0} aria-label={label}>
+        <code>{code}</code>
+      </pre>
+      {message && (
+        <p className="copy-message" role="status">
+          {message}
+        </p>
+      )}
     </div>
   );
 }
