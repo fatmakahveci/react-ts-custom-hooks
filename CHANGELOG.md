@@ -8,7 +8,25 @@ where applicable.
 
 ## [Unreleased]
 
+### Removed
+
+- Retired the Hook Lab route, counter and media-query demos, copyable code panels, and their dedicated tests and styles.
+- Removed obsolete hook documentation and the unused OCI source-package publishing workflow.
+- Removed developer-facing demo links and repeated footer copy from Focus Desk.
+
 ### Added
+
+- Focus Desk: persistent tasks, priorities, debounced search, editing, completion, and confirmed deletion.
+- Task-linked focus sessions, pause/resume, breaks, daily totals, history, and JSON export.
+- Authenticated D1 workspaces with revision checks, validation, and per-user isolation; local SQLite development.
+- Deadline-based timers that survive reloads, with idempotent completion and regression tests.
+
+- Interactive debounce, local storage, and media query hooks with keyboard-accessible tabs.
+- Unit and browser coverage for debounce cleanup, storage synchronization and failures, and media changes.
+
+- Desktop/mobile Playwright tests and automated axe accessibility scans in CI.
+- Shared Prettier formatting and a reproducible demo recording command.
+- A Sites deployment pipeline, live preview link, and social preview metadata.
 
 - Configurable step sizes, manual stepping, and per-counter Steady/Sprint/Slow presets.
 - Live configuration examples with copy controls and an accessible clipboard fallback.
@@ -27,6 +45,9 @@ where applicable.
 
 ### Changed
 
+- Made the useful task workspace the homepage and retained the educational playground at `/lab`.
+- Updated product documentation, preview image, and reproducible demo around real work.
+
 - Extracted typed counter defaults and controlled settings fields; documented timer and clipboard lifecycle decisions.
 - Expanded regression coverage for unchanged rerenders, resets at zero, paused presets, and asynchronous clipboard ordering.
 
@@ -41,6 +62,8 @@ where applicable.
 - Enabled Dependabot updates for npm dependencies.
 
 ### Fixed
+
+- Increased muted text contrast across the new experiment tabs.
 
 - Preserved keyboard focus when resetting a counter and generated unique control IDs for repeated instances.
 - Updated Next.js and its ESLint configuration to 16.3.6 and sharp to 0.35.4 to resolve reported dependency advisories.

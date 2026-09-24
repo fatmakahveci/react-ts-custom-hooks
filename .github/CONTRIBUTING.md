@@ -44,9 +44,9 @@ project.
 ## Naming and Layout
 
 - Use lowercase kebab-case for application filenames and directories, such as
-  `forward-counter.tsx` and `components/counters`.
+  `focus-desk.tsx` and `components/focus`.
 - Keep React component names in PascalCase and hook functions in camelCase with
-  a `use` prefix (`ForwardCounter`, `useCounter`).
+  a `use` prefix (`FocusDesk`, `useWorkspace`).
 - Use `.tsx` for files containing JSX and `.ts` for TypeScript without JSX.
 - Keep route files in `src/app`, reusable components in `src/components`, and
   reusable hooks in `src/hooks`. Preserve Next.js special filenames such as
@@ -55,3 +55,10 @@ project.
   `.test.ts` suffix, or `.test.tsx` when the test uses JSX.
 - Preserve conventional tooling and documentation names such as `README.md`,
   `SECURITY.md`, and `package.json`.
+
+## Formatting and Browser Checks
+
+Run `npm run format` before committing and `npm run check` before review.
+Install Chromium with `npm run test:browser:install`, then run
+`npm run test:browser` for interaction and accessibility checks. Update the
+recording with `npm run demo` when the task and focus experience changes.
