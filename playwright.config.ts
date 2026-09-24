@@ -15,9 +15,14 @@ export default defineConfig({
   },
   projects: [
     { name: "desktop", use: { ...devices["Desktop Chrome"] } },
-    { name: "mobile", use: { ...devices["iPhone 13"], defaultBrowserType: "chromium" } },
+    {
+      name: "mobile",
+      testIgnore: "**/local-api.spec.ts",
+      use: { ...devices["iPhone 13"], defaultBrowserType: "chromium" },
+    },
   ],
   webServer: {
+    env: { FOCUS_DB_PATH: ".local/browser-tests.sqlite" },
     command: "npm run build && npm start -- --hostname 127.0.0.1 --port 4173",
     url: "http://127.0.0.1:4173",
     reuseExistingServer: !process.env.CI,

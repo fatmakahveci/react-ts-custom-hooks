@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
-import { rename, writeFile } from "node:fs/promises";
+import { rename, writeFile, mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "@playwright/test";
 import gifenc from "gifenc";
@@ -13,10 +15,15 @@ const port = 4174;
 const origin = `http://127.0.0.1:${port}`;
 const target = new URL("../demo.gif", import.meta.url);
 const temporary = new URL("../demo.pending.gif", import.meta.url);
+const databaseDirectory = await mkdtemp(join(tmpdir(), "focus-demo-"));
 const server = spawn(
   process.execPath,
   ["node_modules/next/dist/bin/next", "start", "--hostname", "127.0.0.1", "--port", String(port)],
-  { cwd: root, stdio: "inherit" },
+  {
+    cwd: root,
+    stdio: "inherit",
+    env: { ...process.env, FOCUS_DB_PATH: join(databaseDirectory, "demo.sqlite") },
+  },
 );
 let browser;
 
@@ -43,14 +50,7 @@ try {
   await page.clock.install({ time: new Date("2026-01-01T00:00:00Z") });
   await page.goto(origin, { waitUntil: "networkidle" });
   await page.clock.pauseAt(new Date("2026-01-01T00:00:10Z"));
-  const forward = page.getByRole("region", { name: "Forward counter", exact: true });
-  const backward = page.getByRole("region", { name: "Backward counter", exact: true });
-  await forward.getByRole("button", { name: "Reset forward counter" }).click();
-  await backward.getByRole("button", { name: "Reset backward counter" }).click();
-  await backward.getByRole("button", { name: "Reset backward counter" }).blur();
-  const height = await page
-    .locator(".playground-note")
-    .evaluate((element) => Math.ceil(element.getBoundingClientRect().bottom + 20));
+  const height = 1080;
   const gif = GIFEncoder();
   let frames = 0;
 
@@ -71,41 +71,42 @@ try {
     frames += 1;
   }
 
-  async function advance(steps) {
-    for (let index = 0; index < steps; index += 1) {
-      await page.clock.runFor(500);
-      await capture();
-    }
-  }
-
-  // Virtual time gives every recording the same values and frame durations.
+  // Record the real task-to-focus workflow against an isolated local database.
+  await capture(1200);
+  await page.getByLabel("What needs your attention?").fill("Outline the project proposal");
+  await capture(800);
+  await page.getByRole("button", { name: "Add task", exact: true }).click();
+  await page.getByRole("button", { name: "Outline the project proposal", exact: true }).waitFor();
+  await capture(1200);
+  await page.getByLabel("What needs your attention?").fill("Review the pull request");
+  await page.getByLabel("Priority", { exact: true }).selectOption("high");
+  await page.getByRole("button", { name: "Add task", exact: true }).click();
+  await page.getByRole("button", { name: "Review the pull request", exact: true }).waitFor();
   await capture(1000);
-  await advance(4);
-  await forward.getByRole("button", { name: "Sprint", exact: true }).click();
+  await page.getByRole("button", { name: "Outline the project proposal", exact: true }).click();
+  await page.getByRole("button", { name: "15 min", exact: true }).click();
   await capture(1000);
-  await advance(4);
-  assert.equal(
-    await forward.getByLabel("Forward counter value", { exact: true }).textContent(),
-    "22",
-  );
-  await backward.getByRole("button", { name: "Pause backward counter" }).click();
-  await backward.getByLabel("Step size").selectOption("5");
+  await page.getByRole("button", { name: "Start focus", exact: true }).click();
+  await page.getByRole("button", { name: "Pause session", exact: true }).waitFor();
   await capture(1000);
-  await backward.getByRole("button", { name: "Step backward counter" }).click();
+  await page.clock.fastForward(60000);
   await capture(1000);
-  await backward.getByRole("button", { name: "Step backward counter" }).click();
+  await page.getByRole("button", { name: "Pause session", exact: true }).click();
+  await page.getByRole("button", { name: "Resume session", exact: true }).waitFor();
   await capture(1000);
-  await advance(3);
-  assert.equal(
-    await backward.getByLabel("Backward counter value", { exact: true }).textContent(),
-    "-14",
-  );
-  await backward.getByRole("button", { name: "Resume backward counter" }).click();
-  await advance(3);
-  await forward.getByRole("button", { name: "Reset forward counter" }).click();
-  await backward.getByRole("button", { name: "Reset backward counter" }).click();
-  await backward.getByRole("button", { name: "Reset backward counter" }).blur();
-  await capture(1500);
+  await page.getByRole("button", { name: "Resume session", exact: true }).click();
+  await page.getByRole("button", { name: "Pause session", exact: true }).waitFor();
+  await page.clock.fastForward(840000);
+  await page.locator(".session-list li").waitFor();
+  await capture(1800);
+  await page
+    .getByRole("checkbox", { name: "Complete Outline the project proposal", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Done", exact: true }).click();
+  await page
+    .getByRole("checkbox", { name: "Complete Outline the project proposal", exact: true })
+    .waitFor();
+  await capture(1800);
   assert.deepEqual(errors, [], "The recording must not contain browser errors.");
   gif.finish();
   // Keep the previous published GIF intact if capture or encoding fails.
@@ -119,4 +120,5 @@ try {
     server.kill("SIGTERM");
     await stopped;
   }
+  await rm(databaseDirectory, { recursive: true, force: true });
 }

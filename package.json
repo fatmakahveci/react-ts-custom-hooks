@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --hostname 127.0.0.1",
     "build": "next build",
-    "start": "next start",
+    "start": "next start --hostname 127.0.0.1",
     "lint": "eslint . --max-warnings=0",
     "test": "vitest run",
     "typecheck": "next typegen && tsc --noEmit",
@@ -17,7 +17,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "demo": "npm run build && node scripts/record-demo.mjs",
-    "build:sites": "node scripts/build-sites.mjs"
+    "build:sites": "node scripts/build-sites.mjs",
+    "db:generate": "drizzle-kit generate"
   },
   "dependencies": {
     "next": "16.3.6",
@@ -32,6 +33,8 @@
     "@types/node": "22.12.0",
     "@types/react": "18.2.16",
     "@types/react-dom": "18.2.7",
+    "drizzle-kit": "0.31.11",
+    "drizzle-orm": "0.45.3",
     "eslint": "9.39.5",
     "eslint-config-next": "16.3.6",
     "gifenc": "1.0.3",
@@ -45,9 +48,12 @@
   },
   "overrides": {
     "postcss": "8.5.23",
-    "sharp": "0.35.4"
+    "sharp": "0.35.4",
+    "@esbuild-kit/core-utils": {
+      "esbuild": "0.28.2"
+    }
   },
-  "description": "An interactive React and TypeScript playground for reusable counter hooks.",
+  "description": "A personal task and focus workspace built with reusable React and TypeScript hooks.",
   "license": "Apache-2.0",
   "engines": {
     "node": "^22.13.0 || ^24.0.0 || >=26.0.0"

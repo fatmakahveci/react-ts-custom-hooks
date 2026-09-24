@@ -61,4 +61,4 @@ project.
 Run `npm run format` before committing and `npm run check` before review.
 Install Chromium with `npm run test:browser:install`, then run
 `npm run test:browser` for interaction and accessibility checks. Update the
-recording with `npm run demo` when the counter experience changes.
+recording with `npm run demo` when the task and focus experience changes.

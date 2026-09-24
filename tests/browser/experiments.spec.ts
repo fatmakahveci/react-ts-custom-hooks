@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 test("debounces rapid input and supports keyboard tab navigation", async ({ page }) => {
   await page.clock.install({ time: new Date("2026-01-01T00:00:00Z") });
-  await page.goto("/");
+  await page.goto("/lab");
   await page.clock.pauseAt(new Date("2026-01-01T00:00:10Z"));
   await page.getByLabel("Type something").fill("react");
   await page.clock.runFor(499);
@@ -21,7 +21,7 @@ test("a saved note survives reload, synchronizes across tabs, and can be cleared
   page,
   context,
 }) => {
-  await page.goto("/");
+  await page.goto("/lab");
   await page.getByRole("tab", { name: "useLocalStorage" }).click();
   await page.getByLabel("Your next note").fill("Hooks share logic, not state.");
   await page.getByRole("button", { name: "Save note", exact: true }).click();
@@ -31,7 +31,7 @@ test("a saved note survives reload, synchronizes across tabs, and can be cleared
     "Hooks share logic, not state.",
   );
   const other = await context.newPage();
-  await other.goto("/");
+  await other.goto("/lab");
   await other.getByRole("tab", { name: "useLocalStorage" }).click();
   await other.getByLabel("Your next note").fill("Updated in another tab");
   await other.getByRole("button", { name: "Save note", exact: true }).click();
@@ -41,7 +41,7 @@ test("a saved note survives reload, synchronizes across tabs, and can be cleared
 });
 
 test("media queries respond to viewport and preference changes", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/lab");
   await page.getByRole("tab", { name: "useMediaQuery" }).click();
   await page.setViewportSize({ width: 1000, height: 900 });
   await expect(page.getByTestId("wide-result")).toHaveText("Matches");

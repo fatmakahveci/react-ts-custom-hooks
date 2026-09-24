@@ -10,6 +10,11 @@ where applicable.
 
 ### Added
 
+- Focus Desk: persistent tasks, priorities, debounced search, editing, completion, and confirmed deletion.
+- Task-linked focus sessions, pause/resume, breaks, daily totals, history, and JSON export.
+- Authenticated D1 workspaces with revision checks, validation, and per-user isolation; local SQLite development.
+- Deadline-based timers that survive reloads, with idempotent completion and regression tests.
+
 - Interactive debounce, local storage, and media query hooks with keyboard-accessible tabs.
 - Unit and browser coverage for debounce cleanup, storage synchronization and failures, and media changes.
 
@@ -33,6 +38,9 @@ where applicable.
 - ESLint flat configuration, type checking, a combined quality command, and Node version guidance.
 
 ### Changed
+
+- Made the useful task workspace the homepage and retained the educational playground at `/lab`.
+- Updated product documentation, preview image, and reproducible demo around real work.
 
 - Extracted typed counter defaults and controlled settings fields; documented timer and clipboard lifecycle decisions.
 - Expanded regression coverage for unchanged rerenders, resets at zero, paused presets, and asynchronous clipboard ordering.

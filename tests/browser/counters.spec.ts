@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
   await page.clock.install({ time: new Date("2026-01-01T00:00:00Z") });
-  await page.goto("/");
+  await page.goto("/lab");
   await page.clock.pauseAt(new Date("2026-01-01T00:00:10Z"));
   await page.getByRole("button", { name: "Reset forward counter" }).click();
   await page.getByRole("button", { name: "Reset backward counter" }).click();
