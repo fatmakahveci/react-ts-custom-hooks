@@ -10,6 +10,15 @@ where applicable.
 
 ### Added
 
+- Configurable step sizes, manual stepping, and per-counter Steady/Sprint/Slow presets.
+- Live configuration examples with copy controls and an accessible clipboard fallback.
+- A backward-compatible `useCounterController` API with explicit tick and reset controls.
+- Guided experiments and regression coverage for stepping, presets, resets, and clipboard behavior.
+
+- Keyboard skip navigation, a branded favicon, and screen-reader status announcements.
+- Regression coverage for reset focus and multiple same-direction counter instances.
+- CI checks on Node.js 22 and 24, with a separate dependency audit.
+
 - Responsive Hook Lab playground with labeled controls and a hook usage example.
 - Independent pause/resume, tick interval selection, and reset controls.
 - Optional running and interval settings for `useCounter`, preserving its boolean API.
@@ -17,6 +26,9 @@ where applicable.
 - ESLint flat configuration, type checking, a combined quality command, and Node version guidance.
 
 ### Changed
+
+- Extracted typed counter defaults and controlled settings fields; documented timer and clipboard lifecycle decisions.
+- Expanded regression coverage for unchanged rerenders, resets at zero, paused presets, and asynchronous clipboard ordering.
 
 - Refreshed the playground with a lavender and navy palette, distinct counter accents, compact controls, a hook diagram, and an updated demo recording.
 
@@ -29,5 +41,8 @@ where applicable.
 - Enabled Dependabot updates for npm dependencies.
 
 ### Fixed
+
+- Preserved keyboard focus when resetting a counter and generated unique control IDs for repeated instances.
+- Updated Next.js and its ESLint configuration to 16.3.6 and sharp to 0.35.4 to resolve reported dependency advisories.
 
 - Replaced the placeholder body class and added page metadata.
