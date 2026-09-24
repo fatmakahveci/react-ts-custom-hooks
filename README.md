@@ -17,9 +17,13 @@ A recording of the application demonstrating independent counter controls.
 
 - **Independent counters:** count forward or backward from zero.
 - **Interactive timing:** pause, resume, and choose a 0.5, 1, or 2-second tick interval.
-- **Fresh starts:** reset either counter to zero, running at the default one-second interval.
+- **Configurable steps:** move by 1, 2, 5, or 10 per tick; advance manually while paused.
+- **Quick experiments:** Steady, Sprint, and Slow presets preserve the current count and running state.
+- **Live code:** inspect and copy the exact configuration of either counter, with a manual-copy fallback.
+- **Guided learning:** three experiments explain independent state, configuration changes, and manual stepping.
+- **Fresh starts:** reset either counter to zero, running at the default one-second interval and step size of one.
 - **Reusable hook:** typed options and automatic timer cleanup on pause, reconfiguration, and unmount.
-- **Responsive interface:** labeled controls, visible keyboard focus, and semantic headings.
+- **Responsive interface:** labeled controls, visible keyboard focus, a skip link, and semantic headings.
 - **Behavioral tests:** hook lifecycle and user interactions tested with deterministic fake timers.
 
 ## Getting Started
@@ -56,7 +60,10 @@ This starts the built application locally. Choose your own hosting environment f
 2. Pause the forward counter; the backward counter continues.
 3. Change the backward counter's interval to **0.5 seconds**.
 4. Resume the forward counter; it continues from its previous value.
-5. Reset either counter; only that counter returns to its initial settings.
+5. Choose **Sprint** to move by five every half-second.
+6. Pause, change **Step size**, and press **Step** to advance exactly once.
+7. Open **Live code** to inspect or copy the current configuration.
+8. Reset either counter; only that counter returns to its initial settings.
 
 The example beneath the counters shows how both directions use the same hook.
 
@@ -94,20 +101,51 @@ useCounter(forwards?: boolean, options?: CounterOptions): number
 | --- | --- | --- |
 | `forwards` | `true` | Add `1` per tick. Set to `false` to subtract `1`. |
 | `options.running` | `true` | Set to `false` to pause while retaining the current count. |
+| `options.step` | `1` | Positive safe integer added or subtracted per tick. Invalid values throw `RangeError`. |
 | `options.intervalMs` | `1000` | Finite delay between `1` and `2_147_483_647` milliseconds, inclusive. Invalid values throw `RangeError`. |
 
 The returned number starts at `0`. Each hook call owns independent state.
 
 ### Timer Behavior
 
-- Changing direction or interval preserves the count and replaces the active timer.
+- Changing direction, step size, or interval preserves the count and replaces the active timer.
 - Resuming starts a new interval; the next tick occurs after the full delay.
 - Pausing or unmounting clears the timer.
-- Reset belongs to the demo component: it remounts its counter session to restore the count, speed, and running state.
+- Reset in the demo restores the count, interval, step size, and running state without remounting controls, preserving keyboard focus.
 
 Browser timers can be delayed, particularly in background tabs. The counter measures delivered ticks rather than elapsed wall-clock time.
 
 Counter outputs have accessible labels and disable live announcements so screen readers are not interrupted on every tick.
+
+### Explicit Controls
+
+Use the named `useCounterController` export when a component needs reset or manual stepping:
+
+```tsx
+"use client";
+
+import { useCounterController } from "@/hooks/use-counter";
+
+export default function ManualCounter() {
+  const { count, tick, reset } = useCounterController(true, {
+    running: false,
+    intervalMs: 1000,
+    step: 5,
+  });
+
+  return (
+    <div>
+      <output aria-label="Manual counter value">{count}</output>
+      <button onClick={tick}>Advance by five</button>
+      <button onClick={reset}>Reset</button>
+    </div>
+  );
+}
+```
+
+`tick()` advances once in the configured direction, including while paused. `reset()` restores zero and restarts a full interval if running; it preserves the hook options. The demo additionally restores its UI settings. Manual stepping in the demo is disabled while running to make each action easy to observe.
+
+The original default export still returns a number, so existing `useCounter()` calls remain valid. Both APIs share one timer implementation. Values use JavaScript numbers and are intended for small interactive experiments, not precision arithmetic beyond the safe-integer range.
 
 ## Development Commands
 
@@ -120,11 +158,12 @@ Counter outputs have accessible labels and disable live announcements so screen 
 | `npm run test:watch` | Run tests in watch mode. |
 | `npm run build` | Create a production build. |
 | `npm start` | Serve an existing production build. |
+| `npm run audit` | Check dependencies for high or critical security advisories. |
 | `npm run check` | Run lint, type checking, tests, and the production build in sequence. |
 
-Run `npm run check` before submitting changes. GitHub Actions runs the same checks for pushes and pull requests to `main`.
+Run `npm run check` before submitting changes. GitHub Actions runs the same checks on Node.js 22 and 24 for pushes and pull requests to `main`, with a separate dependency audit.
 
-Tests use Vitest, React Testing Library, and jsdom. They cover direction changes, independent counters, pause/resume, speed changes, reset, invalid delays, interval cleanup, and React Strict Mode.
+Tests use Vitest, React Testing Library, and jsdom. They cover direction changes, independent counters, pause/resume, speed changes, reset, invalid delays, interval cleanup, React Strict Mode, keyboard focus after reset, repeated instances, step sizes, presets, controller resets (including at zero), unchanged-option rerenders, paused presets, disabled manual stepping, and clipboard failure or out-of-order completion.
 
 ## Project Structure
 
@@ -134,15 +173,22 @@ src/
 │   ├── globals.css                  Responsive application styles
 │   ├── layout.tsx                   Root layout and page metadata
 │   └── page.tsx                     Playground and usage explanation
+├── components/code/
+│   └── code-example.tsx             Copyable code with accessible feedback
 ├── components/counters/
-│   ├── counter.tsx                  Shared controls and counter session
+│   ├── counter.tsx                  Counter state and user actions
+│   ├── counter-settings.tsx         Controlled settings and preset fields
+│   ├── counter-config.ts            Typed defaults, presets, and options
 │   ├── forward-counter.tsx          Forward-counting example
 │   └── backward-counter.tsx         Backward-counting example
 └── hooks/
     └── use-counter.ts               Timer hook and CounterOptions type
 tests/
-├── hooks/use-counter.test.ts         Hook behavior and lifecycle tests
-└── app/page.test.tsx                 Interactive page tests
+├── hooks/                          Timer and controller lifecycle tests
+└── app/
+    ├── page.test.tsx                Interactive page and focus tests
+    ├── counter.test.tsx             Presets, stepping, and instance isolation
+    └── code-example.test.tsx        Clipboard success and failure tests
 .github/
 ├── workflows/
 │   ├── quality-checks.yml           Lint, types, tests, and build
@@ -151,7 +197,7 @@ tests/
 └── SECURITY.md                      Vulnerability reporting policy
 ```
 
-The page and direction wrappers compose a shared interactive `Counter` component. The hook manages counting and timer cleanup; the counter component owns UI settings and reset behavior.
+The page and direction wrappers compose a shared interactive `Counter` component. The hook manages counting and timer cleanup; the counter component owns UI settings and reset behavior. Controlled settings fields render options from one shared configuration module. Comments document timer resets, focus preservation, and asynchronous clipboard ordering.
 
 ## Project Scope
 

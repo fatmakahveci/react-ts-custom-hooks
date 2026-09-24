@@ -4,7 +4,10 @@ import { act, cleanup, renderHook } from "@testing-library/react";
 import useCounter from "@/hooks/use-counter";
 
 beforeEach(() => vi.useFakeTimers());
-afterEach(() => { cleanup(); vi.useRealTimers(); });
+afterEach(() => {
+  cleanup();
+  vi.useRealTimers();
+});
 
 it("counts forward once per second and clears its timer on unmount", () => {
   const { result, unmount } = renderHook(() => useCounter());
@@ -68,4 +71,14 @@ it.each([0, -1, NaN, Infinity, 2_147_483_648])("rejects invalid timer delay %s",
     window.removeEventListener("error", handleExpectedError);
     silence.mockRestore();
   }
+});
+
+it("updates the step without resetting state or creating additional timers", () => {
+  const { result, rerender } = renderHook(({ step }) => useCounter(false, { step }), { initialProps: { step: 2 } });
+  act(() => vi.advanceTimersByTime(2000));
+  expect(result.current).toBe(-4);
+  rerender({ step: 5 });
+  act(() => vi.advanceTimersByTime(1000));
+  expect(result.current).toBe(-9);
+  expect(vi.getTimerCount()).toBe(1);
 });

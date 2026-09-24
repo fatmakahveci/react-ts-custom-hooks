@@ -3,7 +3,10 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import Home from "@/app/page";
 
 beforeEach(() => vi.useFakeTimers());
-afterEach(() => { cleanup(); vi.useRealTimers(); });
+afterEach(() => {
+  cleanup();
+  vi.useRealTimers();
+});
 
 it("runs independent counters and supports pause, speed changes, reset, and resume", () => {
   render(<Home />);
@@ -28,4 +31,21 @@ it("runs independent counters and supports pause, speed changes, reset, and resu
   expect(forward()).toBe("4");
   expect(backward()).toBe("-1");
   expect(vi.getTimerCount()).toBe(2);
+});
+
+it("keeps keyboard focus on reset while restoring that counter's defaults", () => {
+  render(<Home />);
+  const reset = screen.getByRole("button", { name: "Reset forward counter" });
+  fireEvent.change(screen.getAllByLabelText("Tick interval")[0], { target: { value: "500" } });
+  act(() => vi.advanceTimersByTime(1500));
+  fireEvent.click(screen.getByRole("button", { name: "Pause forward counter" }));
+  reset.focus();
+  fireEvent.click(reset);
+  expect(document.activeElement).toBe(reset);
+  expect(screen.getByLabelText("Forward counter value").textContent).toBe("0");
+  expect((screen.getAllByLabelText("Tick interval")[0] as HTMLSelectElement).value).toBe("1000");
+  expect(screen.getByRole("button", { name: "Pause forward counter" })).toBeTruthy();
+  act(() => vi.advanceTimersByTime(1000));
+  expect(screen.getByLabelText("Forward counter value").textContent).toBe("1");
+  expect(screen.getByLabelText("Backward counter value").textContent).toBe("-2");
 });
