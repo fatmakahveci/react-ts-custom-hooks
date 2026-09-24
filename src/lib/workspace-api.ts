@@ -6,9 +6,44 @@ export interface WorkspaceStore {
 export const jsonResponse = (value: unknown, status = 200) =>
   new Response(JSON.stringify(value), {
     status,
-    headers: { "Content-Type": "application/json", "Cache-Control": "no-store", Vary: "Cookie" },
+    headers: {
+      "Content-Type": "application/json",
+      "Cache-Control": "no-store",
+      "X-Content-Type-Options": "nosniff",
+      Vary: "Cookie, Origin",
+    },
   });
 const json = jsonResponse;
+const MAX_BODY_BYTES = 1_000_000;
+class BodyTooLarge extends Error {}
+
+async function readBody(request: Request): Promise<string> {
+  if (Number(request.headers.get("content-length")) > MAX_BODY_BYTES) {
+    void request.body?.cancel().catch(() => {});
+    throw new BodyTooLarge();
+  }
+  if (!request.body) return "";
+  const reader = request.body.getReader();
+  const buffer = new Uint8Array(MAX_BODY_BYTES);
+  let bytes = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      // Use bounded storage even if the sender supplies many tiny chunks.
+      if (bytes + value.byteLength > MAX_BODY_BYTES) throw new BodyTooLarge();
+      buffer.set(value, bytes);
+      bytes += value.byteLength;
+    }
+    return new TextDecoder("utf-8", { fatal: true }).decode(buffer.subarray(0, bytes));
+  } catch (error) {
+    void reader.cancel().catch(() => {});
+    throw error;
+  } finally {
+    reader.releaseLock();
+  }
+}
+
 export async function handleWorkspace(
   request: Request,
   owner: string | null,
@@ -19,28 +54,29 @@ export async function handleWorkspace(
   if (!["GET", "PUT"].includes(request.method)) return json({ error: "Method not allowed." }, 405);
   if (request.method === "PUT") {
     const origin = request.headers.get("origin");
-    if (
-      (origin && origin !== expectedOrigin) ||
-      request.headers.get("sec-fetch-site") === "cross-site"
-    )
+    if (origin !== expectedOrigin || request.headers.get("sec-fetch-site") === "cross-site")
       return json({ error: "Cross-origin writes are not allowed." }, 403);
-    if (!request.headers.get("content-type")?.startsWith("application/json"))
+    if (
+      request.headers.get("content-type")?.split(";", 1)[0].trim().toLowerCase() !==
+      "application/json"
+    )
       return json({ error: "Expected JSON." }, 415);
   }
   try {
     if (request.method === "GET") return json(await store.read(owner));
-    const raw = await request.text();
-    if (raw.length > 1_000_000) return json({ error: "Workspace is too large." }, 413);
+
     let body: { revision?: unknown; data?: unknown };
     try {
-      body = JSON.parse(raw);
-    } catch {
+      body = JSON.parse(await readBody(request));
+    } catch (error) {
+      if (error instanceof BodyTooLarge) return json({ error: "Workspace is too large." }, 413);
       return json({ error: "Invalid JSON." }, 400);
     }
     if (
       !body ||
       !Number.isSafeInteger(body.revision) ||
       (body.revision as number) < 0 ||
+      (body.revision as number) >= Number.MAX_SAFE_INTEGER ||
       !isWorkspace(body.data)
     )
       return json({ error: "Invalid workspace data." }, 400);
