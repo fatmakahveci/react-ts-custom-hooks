@@ -2,7 +2,7 @@
 
 ## Project Scope
 
-Focus Desk is a personal task and focus application built with Next.js and a Sites Worker. The hosted API requires the platform-provided authenticated user ID and isolates workspaces by that ID in D1. It validates request data, rejects cross-origin writes, and uses optimistic concurrency to prevent stale overwrites. Only the Sites dispatch boundary should supply trusted identity headers; do not expose the Worker behind an untrusted header-forwarding proxy.
+Focus Desk is a personal task and focus application built with Next.js and a Sites Worker. The hosted API requires the platform-provided authenticated user ID and isolates workspaces by that ID in D1. It validates request data, rejects cross-origin writes, and uses optimistic concurrency to prevent stale overwrites. Workspace writes require a matching Origin header and application/json, and request bodies are limited to 1,000,000 bytes while streaming. Only the Sites dispatch boundary should supply trusted identity headers; do not expose the Worker behind an untrusted header-forwarding proxy.
 
 Local Next.js mode uses one SQLite workspace and binds to loopback. It has no account system and is not intended for shared hosting. Local database files are ignored by Git. JSON exports contain task titles and session history; they are user-requested downloads, not encrypted backups.
 
