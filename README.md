@@ -3,7 +3,7 @@
 [![Quality checks](https://github.com/fatmakahveci/react-ts-custom-hooks/actions/workflows/quality-checks.yml/badge.svg)](https://github.com/fatmakahveci/react-ts-custom-hooks/actions/workflows/quality-checks.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE.md)
 
-**One task. Your full attention.** A personal workspace for turning a task list into focused work, built with React, TypeScript, and Next.js.
+A task manager with a focus timer, session history, and daily totals. Built with React, TypeScript, and Next.js.
 
 ## Demo
 
@@ -11,24 +11,22 @@
 
 Private deployment; owner sign-in required.
 
-## What you can do
+## Features
 
-1. Add a concrete task and choose its priority.
-2. Select it and start a 15, 25, or 50-minute focus session.
-3. Pause, resume, or take a five-minute break.
-4. Complete the task and review your recorded focus time for today.
+- Create, edit, prioritize, search, and complete tasks.
+- Start 15, 25, or 50-minute focus sessions with pause and resume controls.
+- Take five-minute breaks and review daily focus totals.
+- View recent sessions and export tasks and history as JSON.
 
-Tasks can be renamed, searched, completed, reopened, and deleted with confirmation. Export your tasks and session history as JSON whenever you need a copy. Exports are downloads; importing or restoring exports is not implemented.
+Timers continue across page reloads. Completed focus sessions count toward daily totals; breaks and stopped sessions do not. Completing a session leaves its task open until you mark it done. Daily totals use your device's timezone.
 
-The app starts empty. Progress comes from completed focus sessions, not sample metrics. The latest ten sessions are shown; up to 5,000 are retained in exports. Up to 1,000 tasks are supported.
+The app supports 1,000 tasks and retains 5,000 sessions, with the latest ten shown in the history. JSON import is not supported.
 
-## How your work is saved
+## Storage
 
-The hosted app stores each signed-in user's workspace in Cloudflare D1, keyed by the identity supplied by Sites. Tasks, session history, and an active timer belong to that user. Other tabs and devices refresh every five seconds and when the window regains focus. Revision checks reject stale writes instead of silently overwriting newer changes; review the refreshed workspace and retry the action.
+Hosted workspaces are stored per user in Cloudflare D1. Changes sync across tabs and devices every five seconds and when the window regains focus. Conflicting edits prompt you to reload the latest state and retry.
 
-A running timer stores an absolute deadline. Refreshing or closing the page does not reset it. If the deadline passes while the app is closed, reopening records completion once. A paused timer stays paused. Stopping early does not add focus time; breaks do not count toward focus totals. The selected task remains open until you explicitly mark it complete. Daily totals use the viewing device's local timezone.
-
-Tasks and history are not stored in localStorage. Only the preferred focus duration is device-local.
+The preferred focus duration is stored in localStorage.
 
 ## Run locally
 
@@ -39,14 +37,14 @@ npm ci
 npm run dev
 ```
 
-Open [localhost:3000](http://localhost:3000). Local development uses one personal SQLite workspace in `.local/focus-desk.sqlite`, which is ignored by Git. Set `FOCUS_DB_PATH` to use another file. This local mode is bound to loopback and is not a multi-user hosting configuration. Hosted authentication and D1 are handled by the Sites worker.
+Open [localhost:3000](http://localhost:3000). Local development uses SQLite at `.local/focus-desk.sqlite`. Set `FOCUS_DB_PATH` to change the location. The local server binds to loopback and uses a single workspace.
 
 ```bash
 npm run build
 npm start
 ```
 
-The separate Sites build exports the UI and bundles the authenticated Worker API. `.openai/hosting.json` declares the existing project and its logical D1 binding. Drizzle migrations in `drizzle/` travel with the deployment; the API also initializes the same table for a fresh database.
+For Sites deployment, run `npm run build:sites`. The build includes static pages, the authenticated Worker API, and migrations from `drizzle/`. Project and D1 settings are in `.openai/hosting.json`.
 
 ## Commands
 
@@ -62,9 +60,9 @@ The separate Sites build exports the UI and bundles the authenticated Worker API
 | `npm run db:generate`          | Generate a migration after a schema change                         |
 | `npm run build:sites`          | Build static pages and the D1-backed Sites worker                  |
 
-For an installed Chrome browser, use `PLAYWRIGHT_CHROMIUM_CHANNEL=chrome` with the browser or demo command. Automated accessibility scans supplement manual review; they are not a claim of full conformance.
+For an installed Chrome browser, use `PLAYWRIGHT_CHROMIUM_CHANNEL=chrome` with the browser or demo command.
 
-CI checks Node.js 22 and 24, dependency security, and desktop/mobile browser behavior. API tests run the actual Worker handler against SQLite, covering user isolation, validation, corrupt records, cross-origin writes, and conflicting revisions. Browser tests isolate API state to keep parallel runs independent. A separate integration test and the demo recorder exercise the real local API against dedicated databases.
+CI runs formatting, lint, type checks, tests, and builds on Node.js 22 and 24. Playwright covers desktop and mobile workflows, including accessibility checks. API tests cover data validation, user isolation, and conflicting writes.
 
 ## Project structure
 
@@ -82,4 +80,6 @@ scripts/                    Demo recorder and deployment build
 
 ## Contributing and security
 
-Read the [contributing guide](.github/CONTRIBUTING.md), [security policy](.github/SECURITY.md), and [changelog](CHANGELOG.md). The repository retains its original `react-ts-custom-hooks` package name and Apache 2.0 license.
+See the [contributing guide](.github/CONTRIBUTING.md), [security policy](.github/SECURITY.md), and [changelog](CHANGELOG.md).
+
+Licensed under [Apache 2.0](LICENSE.md).
