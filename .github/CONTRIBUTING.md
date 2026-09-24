@@ -40,3 +40,18 @@ Before requesting review, confirm that:
 Be responsive to review feedback. Maintainers may request changes or close a
 pull request that is out of scope, unsafe, or no longer aligned with the
 project.
+
+## Naming and Layout
+
+- Use lowercase kebab-case for application filenames and directories, such as
+  `forward-counter.tsx` and `components/counters`.
+- Keep React component names in PascalCase and hook functions in camelCase with
+  a `use` prefix (`ForwardCounter`, `useCounter`).
+- Use `.tsx` for files containing JSX and `.ts` for TypeScript without JSX.
+- Keep route files in `src/app`, reusable components in `src/components`, and
+  reusable hooks in `src/hooks`. Preserve Next.js special filenames such as
+  `page.tsx` and `layout.tsx`.
+- Group tests by area under `tests`, matching the source filename with a
+  `.test.ts` suffix, or `.test.tsx` when the test uses JSX.
+- Preserve conventional tooling and documentation names such as `README.md`,
+  `SECURITY.md`, and `package.json`.
