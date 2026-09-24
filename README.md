@@ -7,9 +7,7 @@ A task manager with a focus timer, session history, and daily totals. Built with
 
 ## Demo
 
-[Open Focus Desk](https://hook-lab-fatmakahveci.fatmakhv.chatgpt.site/)
-
-Private deployment; owner sign-in required.
+![Focus Desk demo](demo.gif)
 
 ## Features
 
