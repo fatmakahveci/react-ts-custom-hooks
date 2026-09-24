@@ -32,6 +32,15 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-.next/
 .swc/
 .*.env
+
+# browser tests
+/playwright-report/
+/test-results/
+
+/demo.pending.gif
+
+/dist/
+
+/.local/
