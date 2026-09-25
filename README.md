@@ -42,7 +42,7 @@ npm run build
 npm start
 ```
 
-For Sites deployment, run `npm run build:sites`. The build includes static pages, the authenticated Worker API, and migrations from `drizzle/`. Project and D1 settings are in `.openai/hosting.json`.
+For optional Sites deployment, configure a local Sites project and D1 binding before running `npm run build:sites`. The build includes static pages, the authenticated Worker API, and migrations from `drizzle/`. Deployment metadata is intentionally untracked; this repository no longer includes a Sites project association. Normal local Next.js development and builds do not require that metadata.
 
 ## Commands
 
